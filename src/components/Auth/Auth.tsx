@@ -1,7 +1,11 @@
+import { CreateUsernameData, CreateUsernameVariables } from "@/src/util/types";
+import { useMutation } from "@apollo/client";
 import { Button, Center, Image, Input, Stack, Text } from "@chakra-ui/react";
 import { Session } from "next-auth";
 import { signIn } from "next-auth/react";
 import { useState } from "react";
+import { toast } from 'react-hot-toast';
+import UserOperations from '../../graphql/operations/user';
 
 interface IAuthProps {
     session: Session | null;
@@ -10,12 +14,31 @@ interface IAuthProps {
 
 const Auth: React.FC<IAuthProps> = ({ session, reloadSession }) => {
     const [username, setUsername] = useState("");
+    const [createUsername, { loading, error }] = useMutation<
+        CreateUsernameData,
+        CreateUsernameVariables
+    >(UserOperations.Mutations.createUsername);
 
     const onSubmit = async () => {
+        if (!username) return;
         try {
+            const { data } = await createUsername({ variables: { username } });
+            if (!data?.createUsername) {
+                throw new Error();
+            }
 
-        } catch (error) {
+            if (data.createUsername.error) {
+                const { createUsername: { error } } = data;
+                throw new Error(error);
+            }
+            toast.success('Username created successfully');
 
+            // reload session to obtain new username
+            reloadSession();
+
+        } catch (error: any) {
+            console.log("onSubmit error", error);
+            toast.error(error?.message)
         }
     }
 
