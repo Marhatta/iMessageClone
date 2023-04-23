@@ -3,14 +3,14 @@
   "plugins": ["prettier"],
   "rules": {
     "prefer-const": "error",
-    "prettier/prettier": [
-      "error",
-      {
-        "endOfLine": "if"
-      }
-    ],
     "no-console": "error",
-    "quotes": "error",
-    "no-unused-vars": "error"
+    "no-unused-vars": "error",
+    "quotes": [
+      2,
+      "single",
+      {
+        "allowTemplateLiterals": true
+      }
+    ]
   }
 }

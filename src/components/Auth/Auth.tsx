@@ -14,7 +14,7 @@ interface IAuthProps {
 
 const Auth: React.FC<IAuthProps> = ({ session, reloadSession }) => {
     const [username, setUsername] = useState("");
-    const [createUsername, { loading, error }] = useMutation<
+    const [createUsername, { loading }] = useMutation<
         CreateUsernameData,
         CreateUsernameVariables
     >(UserOperations.Mutations.createUsername);
@@ -49,7 +49,7 @@ const Auth: React.FC<IAuthProps> = ({ session, reloadSession }) => {
                     <>
                         <Text fontSize={'3xl'}>Create a username</Text>
                         <Input placeholder="Enter a username" value={username} onChange={(event) => setUsername(event.target.value)} />
-                        <Button width={'100%'} onClick={onSubmit}>Save</Button>
+                        <Button width={'100%'} onClick={onSubmit} isLoading={loading}>Save</Button>
                     </>
                 ) : (
                     <>
